@@ -1,15 +1,17 @@
-FROM golang:1.19
 
+FROM golang:1.24.3-alpine AS former
 WORKDIR /app
+COPY . .
+RUN apk add --no-cache git && \
+  go mod download && \
+  CGO_ENABLED=0 go build -o api ./cmd/api  
 
-COPY go.mod go.sum ./
+FROM alpine:3.22
+WORKDIR /backend
 
-RUN go mod download
+# Копируем бинарник и необходимые файлы
+COPY --from=former /app/api .
 
-COPY *.go ./
+EXPOSE 8081
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
-
-EXPOSE 8080
-
-CMD ["/docker-gs-ping"]
+CMD ["./api"]
