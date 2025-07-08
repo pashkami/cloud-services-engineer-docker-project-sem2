@@ -1,40 +1,64 @@
-version: '3.8' # в новых версиях Docker Compose можно не указывать
-services:
-  front:
-    build: ./frontend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./frontend:/app
-    restart: unless-stopped
-    
-  backend:
-    build: ./backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./frontend:/app
-    restart: unless-stopped
-  db:
-    image: postgres:13-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    restart: unless-stopped
+version: '3.8'
 
-  redis:
-    image: redis:6-alpine
-    volumes:
-      - redis_data:/data
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "6379:6379"
+      - "80:80"
+    networks:
+      - momo-net
+    depends_on:
+      - backend
     restart: unless-stopped
+    read_only: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - momo-net
+    restart: unless-stopped
+    read_only: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - backend_vol:/app/data
 
 networks:
-  default:
+  momo-net:
     driver: bridge
 
 volumes:
-  postgres_data:
-  redis_data:
+  backend_vol:
+    driver: local
