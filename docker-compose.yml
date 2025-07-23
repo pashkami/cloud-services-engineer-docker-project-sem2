@@ -59,7 +59,7 @@ services:
     volumes:
       - backend_vol:/app/data
     secrets:
-      - baack_env
+      - back_env
 
 networks:
   momo-net:
