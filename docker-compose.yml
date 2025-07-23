@@ -27,6 +27,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    secrets:
+      - front_env
 
   backend:
     build:
@@ -54,6 +56,8 @@ services:
       start_period: 40s
     volumes:
       - backend_vol:/app/data
+    secrets:
+      - baack_env
 
 networks:
   momo-net:
@@ -62,3 +66,9 @@ networks:
 volumes:
   backend_vol:gi
     driver: local
+
+secrets:
+  front_env:
+    file: ./secrets/front.env
+  back_env:
+    file: ./secrets/back.env
