@@ -80,9 +80,6 @@ COPY --from=build /usr/src/app/dist /usr/share/nginx/html/momo-store
 RUN chown -R nginx:nginx /usr/share/nginx/html/momo-store
 USER nginx
 
-# Use production node environment by default.
-ENV NODE_ENV production
-
 # Copy package.json so that package manager commands can be used.
 COPY package.json .
 
