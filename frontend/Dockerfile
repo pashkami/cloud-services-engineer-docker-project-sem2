@@ -14,6 +14,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+#  OpenSSL flag test
+ENV NODE_OPTIONS=--openssl-legacy-provider
 # Copy source code and build
 COPY . .
 RUN npm run build
