@@ -39,6 +39,8 @@ services:
     networks:
       - momo-net
     restart: unless-stopped
+    environment:
+      - NODE_ENV=production
     read_only: true
     deploy:
       resources:
@@ -64,7 +66,7 @@ networks:
     driver: bridge
 
 volumes:
-  backend_vol:gi
+  backend_vol:
     driver: local
 
 secrets:
