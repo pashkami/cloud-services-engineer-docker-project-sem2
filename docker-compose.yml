@@ -22,13 +22,12 @@ services:
           cpus: '0.25'
           memory: 128M
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:80"]
+      test: ["CMD", "wget", "--spider", "http://localhost:80/momo-store/"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    secrets:
-      - front_env
+
 
   backend:
     build:
@@ -58,8 +57,7 @@ services:
       start_period: 40s
     volumes:
       - backend_vol:/app/data
-    secrets:
-      - back_env
+
 
 networks:
   momo-net:
@@ -68,9 +66,3 @@ networks:
 volumes:
   backend_vol:
     driver: local
-
-secrets:
-  front_env:
-    file: ./secrets/front.env
-  back_env:
-    file: ./secrets/back.env
