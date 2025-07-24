@@ -13,7 +13,7 @@ services:
       - backend
     restart: unless-stopped
     read_only: true
-    tmpfs:  # Добавляем временные файловые системы для записи
+    tmpfs:  
       - /var/cache/nginx
       - /var/run
       - /tmp

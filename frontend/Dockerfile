@@ -35,10 +35,20 @@ COPY nginx.conf /etc/nginx/conf.d
 RUN mkdir -p /usr/share/nginx/html/momo-store
 COPY --from=build-stage /app/dist /usr/share/nginx/html/momo-store
 
-# Security: Set non-root user
-RUN chown -R nginx:nginx /usr/share/nginx/html/momo-store
+# # Security: Set non-root user
+# RUN chown -R nginx:nginx /usr/share/nginx/html/momo-store
+
+RUN adduser -D -g '' appuser && \
+    chown -R appuser:appuser /usr/share/nginx/html && \
+    chown -R appuser:appuser /var/cache/nginx && \
+    chown -R appuser:appuser /var/log/nginx && \
+    chown -R appuser:appuser /etc/nginx/conf.d && \
+    touch /var/run/nginx.pid && \
+    chown -R appuser:appuser /var/run/nginx.pid
+
 USER nginx
 
 # Expose port and start Nginx
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
