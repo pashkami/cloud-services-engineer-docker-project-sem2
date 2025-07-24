@@ -13,7 +13,12 @@ services:
       - backend
     restart: unless-stopped
     read_only: true
+    tmpfs:  # Добавляем временные файловые системы для записи
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
     deploy:
+    user: "nginx"
       resources:
         limits:
           cpus: '0.50'
