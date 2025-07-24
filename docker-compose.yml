@@ -17,7 +17,6 @@ services:
       - /var/cache/nginx
       - /var/run
       - /tmp
-    user: "nginx"
     deploy:
       resources:
         limits:

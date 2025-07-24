@@ -46,7 +46,7 @@ RUN adduser -D -g '' nginx && \
     touch /var/run/nginx.pid && \
     chown -R nginx:nginx /var/run/nginx.pid
 
-USER nginx
+# USER nginx
 
 # Expose port and start Nginx
 EXPOSE 80
