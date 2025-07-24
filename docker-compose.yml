@@ -17,8 +17,8 @@ services:
       - /var/cache/nginx
       - /var/run
       - /tmp
-    deploy:
     user: "nginx"
+    deploy:
       resources:
         limits:
           cpus: '0.50'
