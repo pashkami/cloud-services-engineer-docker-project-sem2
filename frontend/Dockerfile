@@ -38,15 +38,24 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html/momo-store
 # # Security: Set non-root user
 # RUN chown -R nginx:nginx /usr/share/nginx/html/momo-store
 
-RUN adduser -D -g '' nginx && \
-    chown -R nginx:nginx /usr/share/nginx/html && \
-    chown -R nginx:nginx /var/cache/nginx && \
-    chown -R nginx:nginx /var/log/nginx && \
-    chown -R nginx:nginx /etc/nginx/conf.d && \
-    touch /var/run/nginx.pid && \
-    chown -R nginx:nginx /var/run/nginx.pid
+RUN mkdir -p /var/cache/nginx/client_temp && \
+        mkdir -p /var/cache/nginx/proxy_temp && \
+        mkdir -p /var/cache/nginx/fastcgi_temp && \
+        mkdir -p /var/cache/nginx/uwsgi_temp && \
+        mkdir -p /var/cache/nginx/scgi_temp && \
+        chown -R nginx:nginx /var/cache/nginx && \
+        chown -R nginx:nginx /etc/nginx/ && \
+        chmod -R 755 /etc/nginx/ && \
+        chown -R nginx:nginx /var/log/nginx
 
-# USER nginx
+RUN mkdir -p /etc/nginx/ssl/ && \
+    chown -R nginx:nginx /etc/nginx/ssl/ && \
+    chmod -R 755 /etc/nginx/ssl/
+
+RUN touch /var/run/nginx.pid && \
+        chown -R nginx:nginx /var/run/nginx.pid /run/nginx.pid
+
+USER nginx
 
 # Expose port and start Nginx
 EXPOSE 80
