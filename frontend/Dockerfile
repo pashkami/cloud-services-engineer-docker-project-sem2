@@ -38,13 +38,13 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html/momo-store
 # # Security: Set non-root user
 # RUN chown -R nginx:nginx /usr/share/nginx/html/momo-store
 
-RUN adduser -D -g '' appuser && \
-    chown -R appuser:appuser /usr/share/nginx/html && \
-    chown -R appuser:appuser /var/cache/nginx && \
-    chown -R appuser:appuser /var/log/nginx && \
-    chown -R appuser:appuser /etc/nginx/conf.d && \
+RUN adduser -D -g '' nginx && \
+    chown -R nginx:nginx /usr/share/nginx/html && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /etc/nginx/conf.d && \
     touch /var/run/nginx.pid && \
-    chown -R appuser:appuser /var/run/nginx.pid
+    chown -R nginx:nginx /var/run/nginx.pid
 
 USER nginx
 
