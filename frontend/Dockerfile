@@ -1,14 +1,13 @@
-FROM node:21-bullseye AS builder
+FROM node:20-alpine AS builder
 
-# ARG NODE_ENV=production
-# ENV VUE_APP_API_URL=/api
-# ENV NODE_OPTIONS=--openssl-legacy-provider
+ENV VUE_APP_API_URL=/api
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-RUN npm ci
+RUN npm ci --no-audit --no-fund
 
 COPY . .
 
