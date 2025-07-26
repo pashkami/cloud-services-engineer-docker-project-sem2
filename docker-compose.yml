@@ -12,12 +12,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-    read_only: true
-    tmpfs:  
-      - /var/cache/nginx
-      - /var/run
-      - /tmp
-    user: "nginx"
     deploy:
       resources:
         limits:
