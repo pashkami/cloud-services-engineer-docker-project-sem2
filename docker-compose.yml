@@ -1,3 +1,4 @@
+
 version: '3.8'
 
 services:
@@ -21,7 +22,7 @@ services:
           cpus: '0.25'
           memory: 128M
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:80/momo-store/"]
+      test: ["CMD", "curl", "-f", "http://localhost/momo-store/"] 
       interval: 30s
       timeout: 10s
       retries: 3
@@ -49,7 +50,7 @@ services:
           cpus: '0.25'
           memory: 256M
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8081/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
       interval: 30s
       timeout: 10s
       retries: 3
