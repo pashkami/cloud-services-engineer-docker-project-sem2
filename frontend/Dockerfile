@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # 5. Продакшн образ
-FROM nginx:1.25-alpine
+FROM nginx:1-alpine-slim
 
 COPY --from=builder /app/dist /usr/share/nginx/html/momo-store/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
