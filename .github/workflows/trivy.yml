@@ -19,7 +19,7 @@ jobs:
         id: trivy-backend  
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: ${{ secrets.DOCKER_USER }}/cloud-services-engineer-docker-project-sem2-backend:latest
+          image-ref: ${{ secrets.DOCKER_USER }}/pashkami/docker-project-backend:latest
           format: table
           severity: CRITICAL,HIGH
           vuln-type: os,library  
@@ -30,7 +30,7 @@ jobs:
         id: trivy-frontend  
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: ${{ secrets.DOCKER_USER }}/cloud-services-engineer-docker-project-sem2-frontend:latest
+          image-ref: ${{ secrets.DOCKER_USER }}/docker-project-frontend:latest
           format: table
           severity: CRITICAL,HIGH
           vuln-type: os,library 
