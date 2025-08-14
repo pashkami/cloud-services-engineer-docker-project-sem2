@@ -23,7 +23,9 @@ services:
       retries: 3
       start_period: 40s
     environment:
-      - VUE_APP_API_URL=http://backend:8081/api
+      - VUE_APP_API_URL=http://backend:8081
+    secrets:
+      - frontend_env
 
   backend:
     build:
@@ -47,9 +49,24 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    volumes:
+      - backend_data:/app/data
+    secrets:
+      - backend_env
+
 
 networks:
   frontend-net:
     driver: bridge
   backend-net:
     driver: bridge
+
+volumes:
+  backend_data:
+    driver: local
+
+secrets:
+  frontend_env:
+    file: ./secrets/frontend.env
+  backend_env:
+    file: ./secrets/backend.env

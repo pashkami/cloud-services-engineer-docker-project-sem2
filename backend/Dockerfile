@@ -50,8 +50,8 @@ COPY --from=build --chown=appuser:appuser /app/server /app/server
 USER appuser
 EXPOSE 8081
 
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget -qO- http://localhost:8081/healthz || exit 1
+# HEALTHCHECK --interval=30s --timeout=3s \
+#   CMD wget -qO- http://localhost:8081/health || exit 1
 
   
 ENTRYPOINT ["/app/server"]
