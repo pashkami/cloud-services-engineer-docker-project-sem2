@@ -8,25 +8,22 @@ services:
     ports:
       - "80:80"
     networks:
-      - momo-net
+      - frontend-net
     depends_on:
-      - backend
+      backend:
+        condition: service_started
+    cpus: '0.50'
+    mem_limit: 256M
+    mem_reservation: 128M
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 256M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/momo-store/"] 
+      test: ["CMD", "curl", "-f", "http://localhost:80"] 
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
+    environment:
+      - VUE_APP_API_URL=http://backend:8081/api
 
   backend:
     build:
@@ -35,19 +32,15 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - momo-net
+      - backend-net
+      - frontend-net
+    cpus: '0.50'
+    mem_limit: 512M
+    mem_reservation: 256M
     restart: unless-stopped
     environment:
       - NODE_ENV=production
     read_only: true
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
       interval: 30s
@@ -55,7 +48,8 @@ services:
       retries: 3
       start_period: 40s
 
-
 networks:
-  momo-net:
+  frontend-net:
+    driver: bridge
+  backend-net:
     driver: bridge
