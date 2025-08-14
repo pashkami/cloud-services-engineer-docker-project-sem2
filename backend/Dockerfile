@@ -1,33 +1,37 @@
 # syntax=docker/dockerfile:1
 
+
+# Определяем аргумент для версии Go с Alpine Linux
 ARG GO_VERSION=1.22.7-alpine
 
-# Build stage
+# Этап сборки приложения
 FROM golang:${GO_VERSION} AS build
 WORKDIR /src
 
-# Copy dependencies first
+# Копируем файлы зависимостей в первую очередь (оптимизация кэширования)
 COPY go.mod go.sum ./
+
+# Загружаем зависимости с выводом деталей процесса (-x)
 RUN go mod download -x
 
-# Copy source code
+# Копируем весь исходный код приложения
 COPY . .
 
-# Build arguments
+
 ARG TARGETARCH="amd64"
 ARG TARGETOS="linux"
 
-# Build application
+# Компилируем приложение
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
     go build -ldflags="-s -w" -o /app/server ./cmd/api
 
-# Runtime stage
+# Финальный этап: создаем production-образ
 FROM alpine:3.21
 
-# Install runtime dependencies
+# Устанавливаем необходимые для работы пакеты
 RUN apk add --no-cache ca-certificates tzdata
 
-# Create non-root user
+# Создаем непривилегированного пользователя для безопасности
 ARG UID=10001
 RUN adduser \
     --disabled-password \
@@ -38,20 +42,16 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
-# Set secure working directory
+# Создаем рабочую директорию и устанавливаем владельца
 WORKDIR /app
 RUN chown appuser:appuser /app
 
-# Copy binary with proper permissions
+# Копируем собранный бинарник из этапа сборки
 COPY --from=build --chown=appuser:appuser /app/server /app/server
 
 
-# Runtime configuration
+# Переключаемся на непривилегированного пользователя
 USER appuser
 EXPOSE 8081
 
-# HEALTHCHECK --interval=30s --timeout=3s \
-#   CMD wget -qO- http://localhost:8081/health || exit 1
-
-  
 ENTRYPOINT ["/app/server"]
